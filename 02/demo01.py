@@ -29,8 +29,8 @@ def trainNB(data):
             d = sub_data[:, k]
             tag_count = collections.Counter(sub_data[:, k])
             for tag in tags:
-                NBClassify[label][k][tag] = (tag_count[tag]+1)/float(len(d)+sizeof(tag)) 
-                # NBClassify[label][k][tag] = (sum([1 for i in d if i==tag])+1)/len(d)
+                # NBClassify[label][k][tag] = (tag_count[tag]+1)/float(len(d)+sizeof(tag)) 
+                NBClassify[label][k][tag] = (sum([1 for i in d if i==tag])+1)/len(d)
     print(NBClassify) # 先验概率 
     return PGood, PBad, NBClassify
 
@@ -53,10 +53,10 @@ def testNB(data, PG, PB, NBClassify):
 
 
 if __name__ == '__main__':
-    test = [['浅白', '稍蜷', '浊响', '稍糊', '凹陷', '硬滑'],]
+    # test = [['浅白', '稍蜷', '浊响', '稍糊', '凹陷', '硬滑'],]
     confusion_matrix = []
 
-    # test = [['青绿', '蜷缩', '浊响', '清晰', '凹陷', '软粘'],]
+    test = [['青绿', '蜷缩', '浊响', '清晰', '凹陷', '软粘'],]
     data = load_data()
     PG, PB, NBClassify = trainNB(data)
     predict_vec = testNB(test, PG, PB, NBClassify)
