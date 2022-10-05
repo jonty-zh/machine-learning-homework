@@ -4,8 +4,12 @@
 \usepackage{xcolor}
 \usepackage{pdfpages}
 \usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{float}
 
+\geometry{a4paper, left=2cm, right=2cm, top=1cm, bottom=1cm}
 % \usepackage{minted}
+
 
 \lstset{
 	%backgroundcolor=\color{red!50!green!50!blue!50},%代码块背景色为浅灰色
@@ -13,17 +17,17 @@
 	breaklines=true,  %代码过长则换行
 	numbers=left, %行号在左侧显示
 	numberstyle= \small,%行号字体
-	%keywordstyle= \color{blue},%关键字颜色
+	keywordstyle= \color{blue},%关键字颜色
 	commentstyle=\color{gray}, %注释颜色
 %	frame=shadowbox%用方框框住代码块
-	frame=single，
+	frame=single,
 	escapeinside=``    % 代码包含中文
 }
 
 \begin{document}
 \includepdf{cover.pdf}
 \section[作业]{作业要求}
-
+编程设计实现一个基于条件风险最小的Bayes分类器。
 \begin{enumerate}
     \item 样本属性可任意输入设定
     \item 先验概率基于训练样本集合自动求得
@@ -33,22 +37,27 @@
 \section{实现方案}
 \noindent 
 csv文件中的训练样本数据支持增删属性，以满足要求1样本属性可任意输入设定。\\
-先验概率在BayesClassfier类中实现基于训练样本集合自动求得，满足了要求2。\\
-混淆矩阵维度与训练样本数据种类一致，可支持多分类，满足要求3。\\
+先验概率在BayesClassfier类中实现基于训练样本集合自动求得，满足要求2。\\
+混淆矩阵维度与训练样本数据种类一致，可支持多分类，以满足要求3。\\
 
 \noindent
 BayesClassifier实现贝叶斯分类的机制如下
 \begin{enumerate}
-    \item 基于样本训练集计算先验概率
-    \item 根据输入的测试数据计算后验概率
+    \item 基于样本训练集计算先验概率 \\
+    \verb|cal_px(), cal_py(), cal_pxy()|分别计算
+    先验概率$P(X_i),P(Y), P(X_i|Y)$。
+    \item 根据输入的测试数据计算后验概率 \\
+    \verb|cal_pyx()|计算后验概率$P(Y|X)$。
     \item 基于后验概率与输入的混淆矩阵计算条件风险
-    \item 取条件风险值最小对应的类型实现分类
+    \verb|cal_r()|计算条件风险。
+    \item 取条件风险值最小对应的类型实现分类 \\
+    通过对条件风险值进行排序，取最小值作为结果。
 \end{enumerate}
 
-\section{程序源代码}
+\section{源代码}
 \lstinputlisting[language=Python]{../02/bayes_classifier.py}
 
-\section{程序训练数据}
+\section{训练样本数据}
 
 训练样本数据保存在一个csv文件中，由程序进行加载。
 
@@ -78,14 +87,31 @@ BayesClassifier实现贝叶斯分类的机制如下
 \end{table}
 
 \section{程序运行结果}
-
+\subsection{执行程序}
+命令行启动python环境，并执行程序。
+\begin{lstlisting}
+    conda activate drl
+    python bayes_classifier.py
+\end{lstlisting}
+\subsection{输入}
+\begin{lstlisting}[language=Python]
+    # 混淆矩阵
+    con_matrix ={'是':{'是':0, '否':1}, '否':{'是':1, '否':0}}
+    # 测试数据
+    test_data = [['青绿', '蜷缩', '浊响', '清晰', '凹陷', '软粘'], ['浅白', '稍蜷', '浊响', '稍糊', '凹陷', '硬滑']]
+\end{lstlisting}
+\subsection{输出}
+\verb|['是', '否']|
 % \begin{figure}[H] %H为当前位置，!htb为忽略美学标准，htbp为浮动图形
 %     \centering %图片居中
 %     \includegraphics[width=0.7\textwidth]{bayes_exec_res.png} %插入图片，[]中设置图片大小，{}中是图片文件名
 %     \caption{Main name 2} %最终文档中希望显示的图片标题
 %     \label{Fig.main2} %用于文内引用的标签
 % \end{figure}
-
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bayes_exec_res.png}
+\end{figure}
 
 
 
